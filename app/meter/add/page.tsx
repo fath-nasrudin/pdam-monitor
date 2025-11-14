@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { getUserlist } from "@/services/user/user.service";
+import { getUserlist } from "@/features/user/user.service";
 
 export default function AddMeterPage() {
   const users = getUserlist();
