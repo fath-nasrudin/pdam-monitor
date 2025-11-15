@@ -9,6 +9,9 @@ export default function Home() {
       <Link href={ROUTES.meter.add.path}>
         <Button>Tambah Catatan Meter</Button>
       </Link>
+      <Link href={ROUTES.invoices.path}>
+        <Button>Daftar Invoices</Button>
+      </Link>
     </div>
   );
 }

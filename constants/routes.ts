@@ -4,4 +4,7 @@ export const ROUTES = {
       path: "/meter/add",
     },
   },
+  invoices: {
+    path: "/me/invoices",
+  },
 };
