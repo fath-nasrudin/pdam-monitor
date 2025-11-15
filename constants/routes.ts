@@ -7,4 +7,9 @@ export const ROUTES = {
   invoices: {
     path: "/me/invoices",
   },
+  payments: {
+    add: {
+      path: "/payments/add",
+    },
+  },
 };

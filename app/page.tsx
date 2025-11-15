@@ -12,6 +12,9 @@ export default function Home() {
       <Link href={ROUTES.invoices.path}>
         <Button>Daftar Invoices</Button>
       </Link>
+      <Link href={ROUTES.payments.add.path}>
+        <Button>Tambah Pembayaran</Button>
+      </Link>
     </div>
   );
 }
