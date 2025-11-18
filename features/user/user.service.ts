@@ -1,10 +1,13 @@
-export type User = {
+import { User } from "@/lib/generated/prisma/client";
+import { prisma } from "@/lib/prisma";
+
+export type DummyUser = {
   id: string;
   username: string;
   password: string;
 };
 
-export const getUserlist = (): User[] => {
+export const getUserlist = (): DummyUser[] => {
   return [
     {
       id: "1",
@@ -37,4 +40,11 @@ export const getUserlist = (): User[] => {
       password: "dadang4",
     },
   ];
+};
+
+export const getUsersForReadings = async (period: string): Promise<User[]> => {
+  console.log({ period });
+  console.log("TODO: period should be implemented");
+  const users = await prisma.user.findMany();
+  return users;
 };
