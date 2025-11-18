@@ -14,18 +14,35 @@ const users = [
   "yoyon",
 ];
 
-function generateBillingPeriods(startYear: number, endYear: number): string[] {
+function generateBillingPeriods(start: string, end?: string): string[] {
   const periods: string[] = [];
+
+  // Parse start
+  const [startYear, startMonth] = start.split("-").map(Number);
+
+  // Parse end, default ke bulan sekarang
+  let endYear: number, endMonth: number;
+  if (end) {
+    [endYear, endMonth] = end.split("-").map(Number);
+  } else {
+    const now = new Date();
+    endYear = now.getFullYear();
+    endMonth = now.getMonth() + 1; // getMonth() 0-based
+  }
+
   for (let year = startYear; year <= endYear; year++) {
-    for (let month = 1; month <= 12; month++) {
+    const monthStart = year === startYear ? startMonth : 1;
+    const monthEnd = year === endYear ? endMonth : 12;
+
+    for (let month = monthStart; month <= monthEnd; month++) {
       const mm = month.toString().padStart(2, "0");
       periods.push(`${year}-${mm}`);
     }
   }
+
   return periods;
 }
-
-const billingPeriods = generateBillingPeriods(2024, 2025);
+const billingPeriods = generateBillingPeriods("2024-06", "2025-5");
 
 function generateNextReading(prev: number): number {
   return prev + Math.floor(Math.random() * 101); // 0–100 kenaikan
