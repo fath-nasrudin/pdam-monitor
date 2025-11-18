@@ -48,3 +48,28 @@ export async function getUserReadings(year: number): Promise<UserReading[]> {
     };
   });
 }
+
+export interface ReadingInput {
+  userId: string;
+  readingValue: number;
+}
+
+export interface AddReadingsBulkInput {
+  billingPeriod: string; // "YYYY-MM"
+  readings: ReadingInput[];
+}
+
+export async function addReadingsBulk(input: AddReadingsBulkInput) {
+  const dataToInsert = input.readings.map((r) => ({
+    userId: r.userId,
+    billingPeriod: input.billingPeriod,
+    readingValue: r.readingValue,
+  }));
+
+  await prisma.reading.createMany({
+    data: dataToInsert,
+    skipDuplicates: true, // kalau sudah ada, tidak diinsert ulang
+  });
+
+  return { success: true, count: dataToInsert.length };
+}
