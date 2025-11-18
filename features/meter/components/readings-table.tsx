@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import useGetReadings from "../hooks/readings.hook";
 
 const months = [
   "01",
@@ -42,62 +43,8 @@ const MONTH_NAMES = [
 
 export function MeterTable() {
   const [year, setYear] = useState("2025");
-  const data = [
-    {
-      userId: "u1",
-      name: "Asep",
-      readings: {
-        "2025-01": 120,
-        "2025-02": 135,
-        "2025-03": 140,
-        "2025-04": null,
-        "2025-05": 150,
-        "2025-06": null,
-        "2025-07": null,
-        "2025-08": null,
-        "2025-09": null,
-        "2025-10": null,
-        "2025-11": null,
-        "2025-12": null,
-      },
-    },
-    {
-      userId: "u2",
-      name: "Budi",
-      readings: {
-        "2025-01": 90,
-        "2025-02": 100,
-        "2025-03": null,
-        "2025-04": null,
-        "2025-05": 110,
-        "2025-06": 120,
-        "2025-07": null,
-        "2025-08": null,
-        "2025-09": null,
-        "2025-10": null,
-        "2025-11": null,
-        "2025-12": null,
-      },
-    },
-    {
-      userId: "u3",
-      name: "Cici",
-      readings: {
-        "2025-01": null,
-        "2025-02": null,
-        "2025-03": 80,
-        "2025-04": 85,
-        "2025-05": null,
-        "2025-06": null,
-        "2025-07": null,
-        "2025-08": null,
-        "2025-09": null,
-        "2025-10": null,
-        "2025-11": null,
-        "2025-12": null,
-      },
-    },
-  ];
+  const { data, isLoading } = useGetReadings();
+  const availableYears = [2023, 2024, 2025];
 
   return (
     <div className="p-2">
@@ -106,7 +53,7 @@ export function MeterTable() {
         onChange={(e) => setYear(e.target.value)}
         className="border p-2 rounded"
       >
-        {["2023", "2024", "2025"].map((y) => (
+        {availableYears.map((y) => (
           <option key={y} value={y}>
             {y}
           </option>
@@ -114,10 +61,9 @@ export function MeterTable() {
       </select>
 
       <div className="mt-4">
-        {/* {isLoading && <p>Loading...</p>} */}
+        {isLoading && <p>Loading...</p>}
 
-        {/* {!isLoading && data &&  */}
-        {data && (
+        {!isLoading && data && (
           <Table>
             <TableHeader>
               <TableRow>
