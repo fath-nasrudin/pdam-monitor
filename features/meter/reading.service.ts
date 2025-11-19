@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { AddReadingsInput } from "./reading.schema";
 
 export type UserReading = {
   userId: string;
@@ -49,17 +50,7 @@ export async function getUserReadings(year: number): Promise<UserReading[]> {
   });
 }
 
-export interface ReadingInput {
-  userId: string;
-  readingValue: number;
-}
-
-export interface AddReadingsBulkInput {
-  billingPeriod: string; // "YYYY-MM"
-  readings: ReadingInput[];
-}
-
-export async function addReadingsBulk(input: AddReadingsBulkInput) {
+export async function addReadingsBulk(input: AddReadingsInput) {
   const dataToInsert = input.readings.map((r) => ({
     userId: r.userId,
     billingPeriod: input.billingPeriod,
