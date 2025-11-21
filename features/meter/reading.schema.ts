@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { billingPeriodSchema } from "../shared/schema.shared";
 
 export const readingItemSchema = z.object({
   userId: z.string().min(1, "userId wajib"),
@@ -7,7 +8,7 @@ export const readingItemSchema = z.object({
 });
 
 export const addReadingsSchema = z.object({
-  billingPeriod: z.string().regex(/^\d{4}-\d{2}$/, "format harus YYYY-MM"),
+  billingPeriod: billingPeriodSchema,
   readings: z.array(readingItemSchema).min(1, "Minimal 1 reading"),
 });
 
