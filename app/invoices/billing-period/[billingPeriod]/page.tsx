@@ -16,12 +16,8 @@ export default function Page({
     initialData: [],
     queryKey: ["invoices"],
     queryFn: async () => {
-      //  ambil data
-      // jika error throw
-      // jika sukses return (otomatis nimpa initialData)
       const res = await fetch(`/api/invoices?billingPeriod=${billingPeriod}`);
       if (!res.ok) {
-        // nanti kasih error ke error handler
         throw new Error("Failed to fetch invoices");
       }
       const data: { data: Invoice[] } = await res.json();
