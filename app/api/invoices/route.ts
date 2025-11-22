@@ -1,4 +1,5 @@
 import { Invoice } from "@/features/invoice/invoice.type";
+import { NextRequest } from "next/server";
 
 export const invoices: Invoice[] = [
   {
@@ -109,12 +110,18 @@ export const invoices: Invoice[] = [
   },
 ];
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams;
+  const billingPeriod = searchParams.get("billingPeriod");
+  let data = invoices;
+  if (billingPeriod) {
+    data = invoices.filter((i) => i.billingPeriod === billingPeriod);
+  }
   try {
     return Response.json({
       ok: true,
       message: "success",
-      data: invoices,
+      data: data,
     });
   } catch (error) {
     console.error(error);

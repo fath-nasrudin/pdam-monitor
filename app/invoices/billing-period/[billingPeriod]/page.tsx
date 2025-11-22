@@ -4,15 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InvoiceCard } from "@/features/invoice/components/invoice-card";
 import { Invoice } from "@/features/invoice/invoice.type";
 import { useQuery } from "@tanstack/react-query";
-// import { use } from "react";
+import { use } from "react";
 
-export default function Page() {
-  //   {
-  //   params,
-  // }: {
-  //   params: Promise<{ billingPeriod: string }>;
-  // }
-  // const { billingPeriod } = use(params);
+export default function Page({
+  params,
+}: {
+  params: Promise<{ billingPeriod: string }>;
+}) {
+  const { billingPeriod } = use(params);
   const { data: invoices, isLoading } = useQuery({
     initialData: [],
     queryKey: ["invoices"],
@@ -20,7 +19,7 @@ export default function Page() {
       //  ambil data
       // jika error throw
       // jika sukses return (otomatis nimpa initialData)
-      const res = await fetch("/api/invoices");
+      const res = await fetch(`/api/invoices?billingPeriod=${billingPeriod}`);
       if (!res.ok) {
         // nanti kasih error ke error handler
         throw new Error("Failed to fetch invoices");
@@ -41,9 +40,16 @@ export default function Page() {
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-2">
-          {invoices.map((invoice, index) => (
-            <InvoiceCard key={index} invoice={invoice} />
-          ))}
+          {invoices.length ? (
+            invoices.map((invoice, index) => (
+              <InvoiceCard key={index} invoice={invoice} />
+            ))
+          ) : (
+            <p>
+              No Invoices found for current period. Please generate the invoices
+              first
+            </p>
+          )}
         </div>
       </CardContent>
     </Card>
