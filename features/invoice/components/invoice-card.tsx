@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Invoice } from "@/features/invoice/invoice.type";
 import { translatePeriodToText } from "@/features/shared/utils.shared";
 
-export function InvoiceCard({ invoice }: { invoice: Invoice }) {
+export function InvoiceCard({ invoice }: { invoice?: Invoice }) {
+  if (!invoice) return <p>No Invoice found. Generate first</p>;
   return (
     <Card>
       <CardHeader className="text-center">
@@ -17,9 +18,13 @@ export function InvoiceCard({ invoice }: { invoice: Invoice }) {
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-2">
-          <div className="flex gap-2 justify-between">
-            <div>nama Pengguna</div> <div>Fathurrohman</div>
-          </div>
+          {/* invoice user component */}
+          {invoice.user && (
+            <div className="flex gap-2 justify-between">
+              <div>nama Pengguna</div> <div>{invoice.user.username}</div>
+            </div>
+          )}
+
           <div className="flex gap-2 justify-between">
             <div>Meteran Awal</div> <div>{invoice.reading.prev}</div>
           </div>
