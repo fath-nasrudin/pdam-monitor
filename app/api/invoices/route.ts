@@ -4,7 +4,7 @@ import { NextRequest } from "next/server";
 export const invoices: Invoice[] = [
   {
     id: "inv-001",
-    userId: "user-01",
+    userId: "cmi44y9d90000uuv0cbf4wydg", //dadang
     billingPeriod: "2025-01",
     totalUsage: 120,
     totalAmount: 145000,
@@ -25,7 +25,7 @@ export const invoices: Invoice[] = [
 
   {
     id: "inv-002",
-    userId: "user-01",
+    userId: "cmi44y9d90000uuv0cbf4wydg", //dadang
     billingPeriod: "2025-02",
     totalUsage: 95,
     totalAmount: 124000,
@@ -46,7 +46,7 @@ export const invoices: Invoice[] = [
 
   {
     id: "inv-003",
-    userId: "user-02",
+    userId: "cmi44y9ea0002uuv0jpkscmvi", //diding
     billingPeriod: "2025-01",
     totalUsage: 180,
     totalAmount: 190000,
@@ -66,7 +66,7 @@ export const invoices: Invoice[] = [
 
   {
     id: "inv-004",
-    userId: "user-02",
+    userId: "cmi44y9ea0002uuv0jpkscmvi", // diding
     billingPeriod: "2025-02",
     totalUsage: 0,
     totalAmount: 0,
@@ -88,7 +88,7 @@ export const invoices: Invoice[] = [
 
   {
     id: "inv-005",
-    userId: "user-03",
+    userId: "cmi44y9ek0004uuv0nqw498g1", // yeyen
     billingPeriod: "2025-03",
     totalUsage: 210,
     totalAmount: 240000,
