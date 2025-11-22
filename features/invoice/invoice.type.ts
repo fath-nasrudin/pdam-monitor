@@ -1,6 +1,9 @@
+import { User } from "@/lib/generated/prisma/client";
+
 export type Invoice = {
   id: string;
   userId: string;
+  user?: User;
   billingPeriod: string;
 
   totalUsage: number;
