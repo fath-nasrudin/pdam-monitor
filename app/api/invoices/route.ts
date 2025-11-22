@@ -1,4 +1,7 @@
+import { generateInvoiceSchema } from "@/features/invoice/invoice.schema";
+import { generateInvoice } from "@/features/invoice/invoice.service";
 import { Invoice } from "@/features/invoice/invoice.type";
+import { responseError, responseSuccess } from "@/lib/api/response";
 import { NextRequest } from "next/server";
 
 export const invoices: Invoice[] = [
@@ -129,5 +132,21 @@ export async function GET(req: NextRequest) {
       ok: false,
       message: "failed",
     });
+  }
+}
+
+// generate invoice
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const data = await generateInvoiceSchema.parseAsync(body);
+
+    const createdInvoice = await generateInvoice(data);
+    invoices.push(createdInvoice);
+
+    return responseSuccess({ data: createdInvoice });
+  } catch (error) {
+    console.error(error);
+    return responseError({ error });
   }
 }
