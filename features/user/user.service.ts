@@ -48,3 +48,11 @@ export const getUsersForReadings = async (period: string): Promise<User[]> => {
   const users = await prisma.user.findMany();
   return users;
 };
+export const getUsersByBillingPeriod = async (
+  period: string
+): Promise<User[]> => {
+  console.log({ period });
+  console.log("TODO: period should be implemented");
+  const users = await prisma.user.findMany();
+  return users;
+};

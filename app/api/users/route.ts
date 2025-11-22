@@ -1,4 +1,4 @@
-import { getUsersForReadings } from "@/features/user/user.service";
+import { getUsersByBillingPeriod } from "@/features/user/user.service";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   const period = url.searchParams.get("period") || currentPeriod;
 
   try {
-    const data = await getUsersForReadings(period);
+    const data = await getUsersByBillingPeriod(period);
     return Response.json({
       ok: true,
       message: "success",
