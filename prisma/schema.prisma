@@ -18,6 +18,7 @@ model User {
   id       String    @id @default(cuid())
   username String    @unique
   readings Reading[]
+  invoices Invoice[]
 }
 
 model Reading {
@@ -28,4 +29,39 @@ model Reading {
   readingValue  Float
 
   @@unique([userId, billingPeriod])
+}
+
+model Invoice {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  billingPeriod  String
+
+  totalUsage     Int
+  totalAmount    Int
+  totalPaid      Int
+
+  // paymentStatus  PaymentStatus
+  documentStatus DocumentStatus
+
+  // pricing flattened
+  pricingFixed            Int
+  pricingTariff           Int
+  pricingDiscountAmount   Int?
+  pricingDiscountPercent  Int?
+
+  // reading flattened
+  readingPrev             Int
+  readingCurr             Int
+  readingDiscountAmount   Int?
+  readingDiscountPercent  Int?
+
+  // paymentAllocations PaymentAllocation[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+enum DocumentStatus {
+  sent
+  draft
 }
