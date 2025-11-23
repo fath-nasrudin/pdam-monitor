@@ -16,15 +16,15 @@ export type Invoice = {
   pricing: {
     fixed: number;
     tariff: number;
-    discountAmount?: number;
-    discountPercentage?: number;
+    discountAmount?: number | null;
+    discountPercentage?: number | null;
   };
 
   reading: {
     prev: number;
     curr: number;
-    discountAmount?: number;
-    discountPercentage?: number;
+    discountAmount?: number | null;
+    discountPercentage?: number | null;
   };
 
   paymentAllocation: { id: string; allocated: number }[];
