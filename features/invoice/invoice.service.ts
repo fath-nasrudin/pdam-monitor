@@ -69,7 +69,14 @@ export async function generateInvoice({
 
   //   save invoice data to db
   // return saved invoice data
-  const fakeSaved: Invoice = { ...invoiceData, id: Date.now().toString() };
-  return fakeSaved;
+  const savedInvoice = await invoiceRepo.createInvoice(invoiceData);
+  return savedInvoice;
   //   should append user?
+}
+
+export async function getInvoices(props?: {
+  billingPeriod?: BillingPeriod | null;
+}) {
+  const billingPeriod = props?.billingPeriod;
+  return invoiceRepo.findInvoices({ where: { billingPeriod } });
 }
