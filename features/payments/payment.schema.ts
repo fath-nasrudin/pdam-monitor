@@ -7,4 +7,7 @@ export const createPaymentSchema = z.object({
   notes: z.string().optional(),
 });
 
+// deprecated
 export type CreatePaymentInput = z.infer<typeof createPaymentSchema>;
+
+export type CreatePaymentSchemaInput = z.infer<typeof createPaymentSchema>;
