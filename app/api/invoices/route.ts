@@ -1,4 +1,7 @@
-import { generateInvoiceSchema } from "@/features/invoice/invoice.schema";
+import {
+  findInvoiceQuerySchema,
+  generateInvoiceSchema,
+} from "@/features/invoice/invoice.schema";
 import {
   generateInvoice,
   getInvoices,
@@ -8,8 +11,14 @@ import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
-  const billingPeriod = searchParams.get("billingPeriod");
-  const data = await getInvoices({ billingPeriod });
+  const billingPeriod = searchParams.get("billingPeriod") ?? undefined;
+  const userId = searchParams.get("userId") ?? undefined;
+
+  const { paymentStatuses } = await findInvoiceQuerySchema.parseAsync({
+    paymentStatuses: searchParams.getAll("paymentStatuses"),
+  });
+
+  const data = await getInvoices({ billingPeriod, userId, paymentStatuses });
   try {
     return Response.json({
       ok: true,

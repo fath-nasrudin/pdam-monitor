@@ -1,3 +1,4 @@
+import type { PaymentStatus } from "@/lib/generated/prisma/enums";
 import { BillingPeriod } from "../shared/schema.shared";
 import * as invoiceDomain from "./invoice.domain";
 import * as invoiceRepo from "./invoice.repo";
@@ -75,8 +76,9 @@ export async function generateInvoice({
 }
 
 export async function getInvoices(props?: {
-  billingPeriod?: BillingPeriod | null;
+  billingPeriod?: BillingPeriod;
+  userId?: string;
+  paymentStatuses?: PaymentStatus[];
 }) {
-  const billingPeriod = props?.billingPeriod;
-  return invoiceRepo.findInvoices({ where: { billingPeriod } });
+  return invoiceRepo.findInvoices({ where: props });
 }

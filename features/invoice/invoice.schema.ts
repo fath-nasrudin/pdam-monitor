@@ -6,4 +6,12 @@ export const generateInvoiceSchema = z.object({
   userId: z.string().min(1, "userId cannot be empty"),
 });
 
+export const findInvoiceQuerySchema = z.object({
+  billingPeriod: billingPeriodSchema.optional(),
+  paymentStatuses: z
+    .array(z.enum(["paid", "partial", "unpaid", "waiped"]))
+    .optional(),
+});
+
+export type FindInvoiceQueryInput = z.infer<typeof findInvoiceQuerySchema>;
 export type GenerateInvoiceInput = z.infer<typeof generateInvoiceSchema>;
