@@ -75,7 +75,7 @@ export async function findInvoices(props?: {
   where?: {
     billingPeriod?: BillingPeriod;
     userId?: string;
-    paymentStatuses?: PaymentStatus[];
+    paymentStatus?: PaymentStatus[];
   };
 }): Promise<Invoice[]> {
   let billingPeriod = props?.where?.billingPeriod ?? undefined;
@@ -88,9 +88,9 @@ export async function findInvoices(props?: {
   const invoiceDB = await prisma.invoice.findMany({
     where: {
       ...props?.where,
-      paymentStatus: props?.where?.paymentStatuses?.length
+      paymentStatus: props?.where?.paymentStatus?.length
         ? {
-            in: props?.where?.paymentStatuses,
+            in: props?.where?.paymentStatus,
           }
         : undefined,
     },

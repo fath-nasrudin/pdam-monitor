@@ -78,7 +78,7 @@ export async function generateInvoice({
 export async function getInvoices(props?: {
   billingPeriod?: BillingPeriod;
   userId?: string;
-  paymentStatuses?: PaymentStatus[];
+  paymentStatus?: PaymentStatus[];
 }) {
   return invoiceRepo.findInvoices({ where: props });
 }

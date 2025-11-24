@@ -14,11 +14,11 @@ export async function GET(req: NextRequest) {
   const billingPeriod = searchParams.get("billingPeriod") ?? undefined;
   const userId = searchParams.get("userId") ?? undefined;
 
-  const { paymentStatuses } = await findInvoiceQuerySchema.parseAsync({
-    paymentStatuses: searchParams.getAll("paymentStatuses"),
+  const { paymentStatus } = await findInvoiceQuerySchema.parseAsync({
+    paymentStatus: searchParams.getAll("paymentStatus"),
   });
 
-  const data = await getInvoices({ billingPeriod, userId, paymentStatuses });
+  const data = await getInvoices({ billingPeriod, userId, paymentStatus });
   try {
     return Response.json({
       ok: true,

@@ -17,15 +17,20 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { getUserlist } from "@/features/user/user.service";
+import { useGetUsers } from "@/features/user/user.hook";
+// import { getUserlist } from "@/features/user/user.service";
 import { cn } from "@/lib/utils";
 import { CheckIcon, ChevronsUpDown } from "lucide-react";
 import React from "react";
 
 function UserCombobox() {
-  const userlist = getUserlist();
+  // const userlist = getUserlist();
+  const { data: userlist, isLoading } = useGetUsers();
   const [open, setOpen] = React.useState(false);
   const [selectedUserId, setSelectedUserId] = React.useState("");
+
+  if (isLoading) return <p>Loading...</p>;
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -36,7 +41,7 @@ function UserCombobox() {
           className="w-[200px] justify-between"
         >
           {selectedUserId
-            ? userlist.find((u) => u.id === selectedUserId)?.username
+            ? userlist?.find((u) => u.id === selectedUserId)?.username
             : "Pilih Pengguna"}
           <ChevronsUpDown className="opacity-50" />
         </Button>
@@ -48,7 +53,7 @@ function UserCombobox() {
           <CommandList>
             <CommandEmpty>Tidak ada pengguna ditemukan</CommandEmpty>
             <CommandGroup>
-              {userlist.map((u) => (
+              {userlist?.map((u) => (
                 <CommandItem
                   key={u.id}
                   value={u.id}

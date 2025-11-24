@@ -8,7 +8,7 @@ export const generateInvoiceSchema = z.object({
 
 export const findInvoiceQuerySchema = z.object({
   billingPeriod: billingPeriodSchema.optional(),
-  paymentStatuses: z
+  paymentStatus: z
     .array(z.enum(["paid", "partial", "unpaid", "waiped"]))
     .optional(),
 });
