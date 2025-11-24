@@ -56,9 +56,13 @@ model Invoice {
   readingDiscountAmount   Int?
   readingDiscountPercent  Int?
 
+  // unique constraint
+  @@unique([userId, billingPeriod])
+
   // paymentAllocations PaymentAllocation[]
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+
 }
 
 enum DocumentStatus {
