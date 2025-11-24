@@ -21,7 +21,11 @@ export default function AddPaymentPage() {
   const queryClient = useQueryClient();
   const { data: userlist, isLoading: isLoadingUsers } = useGetUsers();
 
-  const { data: payments, isLoading } = useQuery({
+  const {
+    data: payments,
+    isLoading: isLoadingPayments,
+    isFetching: isFetchingPayments,
+  } = useQuery({
     initialData: [],
     queryKey: ["payment"],
     queryFn: async () => {
@@ -73,8 +77,6 @@ export default function AddPaymentPage() {
       mutateAsync(data);
     },
   });
-
-  if (isLoading) return <p>Loading...</p>;
 
   return (
     <div className="max-w-md p-2">
@@ -176,9 +178,17 @@ export default function AddPaymentPage() {
 
       {/* list payment */}
       <div className="flex flex-col gap-2">
-        {payments.map((payment) => (
-          <PaymentCard key={payment.id} payment={payment} />
-        ))}
+        {isLoadingPayments ? (
+          <p>Payment Loading...</p>
+        ) : isFetchingPayments ? (
+          <p>Fetching Payments...</p>
+        ) : !payments.length ? (
+          <p>No payment found. Create payment first</p>
+        ) : (
+          payments.map((payment) => (
+            <PaymentCard key={payment.id} payment={payment} />
+          ))
+        )}
       </div>
     </div>
   );
