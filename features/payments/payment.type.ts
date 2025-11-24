@@ -6,6 +6,7 @@ export type Payment = {
   user?: User;
   amount: number;
   amountRemaining: number;
-  method: "cash" | "transfer";
+  amountAllocated: number;
+  paymentMethod: "cash" | "transfer";
   notes?: string;
 };

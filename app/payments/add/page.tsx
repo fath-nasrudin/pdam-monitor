@@ -18,22 +18,32 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { PaymentCard } from "@/features/payments/components/payment-card";
+import {
+  CreatePaymentInput,
+  createPaymentSchema,
+} from "@/features/payments/payment.schema";
 import { Payment } from "@/features/payments/payment.type";
 import { useGetUsers } from "@/features/user/user.hook";
 import { ApiResponse } from "@/lib/api/response";
+import { User } from "@/lib/generated/prisma/browser";
 // import { getUserlist } from "@/features/user/user.service";
 import { cn } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
+import { useForm } from "@tanstack/react-form";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckIcon, ChevronsUpDown } from "lucide-react";
 import React from "react";
 
-function UserCombobox() {
-  // const userlist = getUserlist();
-  const { data: userlist, isLoading } = useGetUsers();
+function UserCombobox({
+  userlist,
+  value,
+  onChange,
+}: {
+  userlist: User[];
+  value: string;
+  onChange: (v: string) => void;
+}) {
   const [open, setOpen] = React.useState(false);
-  const [selectedUserId, setSelectedUserId] = React.useState("");
-
-  if (isLoading) return <p>Loading...</p>;
+  const selectedUser = userlist.find((u) => u.id === value);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -44,9 +54,7 @@ function UserCombobox() {
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {selectedUserId
-            ? userlist?.find((u) => u.id === selectedUserId)?.username
-            : "Pilih Pengguna"}
+          {selectedUser ? selectedUser.username : "Pilih Pengguna"}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -61,17 +69,16 @@ function UserCombobox() {
                 <CommandItem
                   key={u.id}
                   value={u.id}
-                  onSelect={(currentUserId) => {
-                    setSelectedUserId(
-                      currentUserId === selectedUserId ? "" : currentUserId
-                    );
+                  onSelect={(currentId) => {
+                    const newValue = currentId === value ? "" : currentId;
+                    onChange(newValue);
                     setOpen(false);
                   }}
                 >
                   <CheckIcon
                     className={cn(
                       "mr-2 h-4 w-4",
-                      selectedUserId === u.id ? "opacity-100" : "opacity-0"
+                      value === u.id ? "opacity-100" : "opacity-0"
                     )}
                   />
                   {u.username}
@@ -86,6 +93,9 @@ function UserCombobox() {
 }
 
 export default function AddPaymentPage() {
+  const queryClient = useQueryClient();
+  const { data: userlist, isLoading: isLoadingUsers } = useGetUsers();
+
   const { data: payments, isLoading } = useQuery({
     initialData: [],
     queryKey: ["payment"],
@@ -99,6 +109,46 @@ export default function AddPaymentPage() {
     },
   });
 
+  const { mutateAsync } = useMutation({
+    mutationFn: async (data: CreatePaymentInput) => {
+      const res = await fetch("/api/payments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // temporal fix
+        body: JSON.stringify({ ...data, amount: data.amount.toString() }),
+      });
+
+      const resData: ApiResponse<Payment> = await res.json();
+
+      if (!res.ok) {
+        throw new Error(resData.message);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["payment"] });
+    },
+  });
+
+  const formDefaultValues = {
+    amount: "",
+    paymentMethod: "cash",
+    userId: "",
+  };
+
+  const form = useForm({
+    defaultValues: formDefaultValues,
+    validators: {
+      onChange: createPaymentSchema,
+    },
+
+    onSubmit: async ({ value }) => {
+      const data = createPaymentSchema.parse(value);
+      mutateAsync(data);
+    },
+  });
+
   if (isLoading) return <p>Loading...</p>;
 
   return (
@@ -108,41 +158,89 @@ export default function AddPaymentPage() {
           <CardTitle>Buat Pembayaran</CardTitle>
         </CardHeader>
         <CardContent>
-          <form>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+
+              form.handleSubmit();
+            }}
+          >
             <div className="flex flex-col gap-4">
               {/* pilih user */}
-              <Field key={"test1"} orientation={"vertical"}>
-                <FieldLabel className="min-w-40" htmlFor={"test1"}>
-                  Pilih Pengguna
-                </FieldLabel>
-                {/* <Input id={"test1"} name={"test1"} type="text" required /> */}
-                <UserCombobox />
-              </Field>
+              <form.Field name="userId">
+                {(field) => (
+                  <Field id={field.name} orientation={"vertical"}>
+                    <FieldLabel className="min-w-40" htmlFor={field.name}>
+                      Pilih Pengguna
+                    </FieldLabel>
+                    {isLoadingUsers || !userlist ? (
+                      <p>loading...</p>
+                    ) : (
+                      <UserCombobox
+                        userlist={userlist}
+                        value={field.state.value}
+                        onChange={field.handleChange}
+                      />
+                    )}
+                    {!field.state.meta.isValid && (
+                      <em role="alert">
+                        {field.state.meta.errors[0]?.message}
+                      </em>
+                    )}
+                  </Field>
+                )}
+              </form.Field>
 
               {/* amount */}
-              <Field key={"test2"} orientation={"vertical"}>
-                <FieldLabel className="min-w-40" htmlFor={"test2"}>
-                  Jumlah
-                </FieldLabel>
-                <Input id={"test2"} name={"test2"} type="number" required />
-              </Field>
-
+              <form.Field name="amount">
+                {(field) => (
+                  <Field orientation={"vertical"}>
+                    <FieldLabel className="min-w-40" htmlFor={field.name}>
+                      Jumlah
+                    </FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      type="number"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      required
+                    />
+                    {!field.state.meta.isValid && (
+                      <em role="alert">
+                        {field.state.meta.errors[0]?.message}
+                      </em>
+                    )}
+                  </Field>
+                )}
+              </form.Field>
               {/* method */}
-              <Field key={"test3"} orientation={"vertical"}>
-                <FieldLabel className="min-w-40" htmlFor={"test3"}>
-                  Metode Pembayaran
-                </FieldLabel>
-                <Input id={"test3"} name={"test3"} type="text" required />
-              </Field>
+              <form.Field name="paymentMethod">
+                {(field) => (
+                  <Field orientation={"vertical"}>
+                    <FieldLabel className="min-w-40" htmlFor={field.name}>
+                      Metode Pembayaran
+                    </FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      type="text"
+                      required
+                    />
+                    {!field.state.meta.isValid && (
+                      <em role="alert">
+                        {field.state.meta.errors[0]?.message}
+                      </em>
+                    )}
+                  </Field>
+                )}
+              </form.Field>
 
               {/* pilih beberapa invoice, simpan ke saldo jika ada lebih */}
               {/* pilih tanggal dan jam bayar. default sekarang */}
-              <Field key={"test4"} orientation={"vertical"}>
-                <FieldLabel className="min-w-40" htmlFor={"test4"}>
-                  Pilih tagihan yang mau dibayar
-                </FieldLabel>
-                <Input id={"test4"} name={"test4"} type="text" required />
-              </Field>
 
               {/* submit button */}
               <Button>Buat</Button>
