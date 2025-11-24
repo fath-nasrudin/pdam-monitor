@@ -19,6 +19,7 @@ model User {
   username String    @unique
   readings Reading[]
   invoices Invoice[]
+  payments Payment[]
 }
 
 model Reading {
@@ -75,4 +76,25 @@ enum PaymentStatus {
   partial
   unpaid
   waiped
+}
+
+model Payment {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  amount          Int
+  amountRemaining Int
+  amountAllocated Int
+
+  paymentMethod   PaymentMethod
+  notes           String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+enum PaymentMethod {
+  cash
+  transfer
 }
