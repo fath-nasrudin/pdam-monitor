@@ -1,12 +1,13 @@
-import { User } from "@/lib/generated/prisma/browser";
-
 export type Payment = {
   id: string;
   userId: string;
-  user?: User;
+  user?: {
+    id: string;
+    username: string;
+  };
   amount: number;
   amountRemaining: number;
   amountAllocated: number;
   paymentMethod: "cash" | "transfer";
-  notes?: string;
+  notes: string | null;
 };
