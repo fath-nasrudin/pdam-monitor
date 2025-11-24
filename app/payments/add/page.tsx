@@ -17,9 +17,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { PaymentCard } from "@/features/payments/components/payment-card";
+import { Payment } from "@/features/payments/payment.type";
 import { useGetUsers } from "@/features/user/user.hook";
+import { ApiResponse } from "@/lib/api/response";
 // import { getUserlist } from "@/features/user/user.service";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 import { CheckIcon, ChevronsUpDown } from "lucide-react";
 import React from "react";
 
@@ -82,6 +86,21 @@ function UserCombobox() {
 }
 
 export default function AddPaymentPage() {
+  const { data: payments, isLoading } = useQuery({
+    initialData: [],
+    queryKey: ["payment"],
+    queryFn: async () => {
+      const res = await fetch("/api/payments");
+      const response: ApiResponse<Payment[]> = await res.json();
+      if (!res.ok) {
+        throw new Error(response.message);
+      }
+      return response.data;
+    },
+  });
+
+  if (isLoading) return <p>Loading...</p>;
+
   return (
     <div className="max-w-md p-2">
       <Card>
@@ -131,6 +150,13 @@ export default function AddPaymentPage() {
           </form>
         </CardContent>
       </Card>
+
+      {/* list payment */}
+      <div className="flex flex-col gap-2">
+        {payments.map((payment) => (
+          <PaymentCard key={payment.id} payment={payment} />
+        ))}
+      </div>
     </div>
   );
 }
