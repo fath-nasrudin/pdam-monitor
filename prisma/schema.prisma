@@ -41,7 +41,7 @@ model Invoice {
   totalAmount    Int
   totalPaid      Int
 
-  // paymentStatus  PaymentStatus
+  paymentStatus  PaymentStatus @default(unpaid)
   documentStatus DocumentStatus
 
   // pricing flattened
@@ -64,4 +64,11 @@ model Invoice {
 enum DocumentStatus {
   sent
   draft
+}
+
+enum PaymentStatus {
+  paid
+  partial
+  unpaid
+  waiped
 }
