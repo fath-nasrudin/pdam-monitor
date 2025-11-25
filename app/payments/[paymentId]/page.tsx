@@ -32,6 +32,18 @@ function PaymentCard({ payment }: { payment: Payment }) {
           <div>
             Belum dialokasikan: <span>{payment.amountRemaining}</span>
           </div>
+
+          <div className="p-2 border">
+            <h2>Detail alokasi</h2>
+            <div className="space-y-2">
+              {payment.paymentAllocations.map((alloc) => (
+                <div key={alloc.id} className="p-2 border">
+                  <div>invoice: {alloc.invoiceId}</div>
+                  <div>Dialokasikan: {alloc.amount}</div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>
