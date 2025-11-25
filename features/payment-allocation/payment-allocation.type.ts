@@ -8,5 +8,5 @@ export type PaymentAllocation = {
   invoiceId: string;
   invoice?: Pick<Invoice, "id">;
   amount: number;
-  notes: string | null | undefined;
+  notes?: string | null;
 };
