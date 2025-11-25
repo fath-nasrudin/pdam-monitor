@@ -16,6 +16,7 @@ import { ApiResponse } from "@/lib/api/response";
 
 import { useForm } from "@tanstack/react-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
 
 export default function AddPaymentPage() {
   const queryClient = useQueryClient();
@@ -186,7 +187,9 @@ export default function AddPaymentPage() {
           <p>No payment found. Create payment first</p>
         ) : (
           payments.map((payment) => (
-            <PaymentCard key={payment.id} payment={payment} />
+            <Link key={payment.id} href={`/payments/${payment.id}`}>
+              <PaymentCard payment={payment} />
+            </Link>
           ))
         )}
       </div>
