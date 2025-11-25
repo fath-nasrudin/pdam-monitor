@@ -2,7 +2,7 @@ import { createPaymentSchema } from "@/features/payments/payment.schema";
 import { responseError, responseSuccess } from "@/lib/api/response";
 import { NextRequest } from "next/server";
 import * as PaymentService from "@/features/payments/payment.service";
-import { PaymentAllocation } from "@/features/payments/payment.type";
+import { PaymentAllocation } from "@/features/payment-allocation/payment-allocation.type";
 
 const paymentAllocations: PaymentAllocation[] = [
   {
