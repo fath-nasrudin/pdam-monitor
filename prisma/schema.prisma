@@ -60,7 +60,7 @@ model Invoice {
   // unique constraint
   @@unique([userId, billingPeriod])
 
-  // paymentAllocations PaymentAllocation[]
+  paymentAllocations PaymentAllocation[]
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
@@ -90,6 +90,9 @@ model Payment {
   paymentMethod   PaymentMethod
   notes           String?
 
+  paymentAllocations PaymentAllocation[]
+
+
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
@@ -97,4 +100,19 @@ model Payment {
 enum PaymentMethod {
   cash
   transfer
+}
+
+model PaymentAllocation {
+  id         String   @id @default(cuid())
+  paymentId  String
+  invoiceId  String
+  amount     Int
+  notes      String?
+
+  // relations
+  payment    Payment  @relation(fields: [paymentId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  invoice    Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([paymentId])
+  @@index([invoiceId])
 }
