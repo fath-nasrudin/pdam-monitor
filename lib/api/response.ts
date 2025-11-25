@@ -29,10 +29,17 @@ export function responseError({
   error: unknown;
   message?: string;
 }) {
-  return NextResponse.json({
-    ok: false,
-    message: message || "Something unexpected happened",
-    data: null,
-    error: error,
-  });
+  const status = 500;
+
+  return NextResponse.json(
+    {
+      ok: false,
+      message: message || "Something unexpected happened",
+      data: null,
+      error: error,
+    },
+    {
+      status,
+    }
+  );
 }
