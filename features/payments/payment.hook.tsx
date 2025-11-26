@@ -20,3 +20,22 @@ export const useGetPayments = () => {
 
   return { data, isLoading, isFetching };
 };
+
+export const useGetPaymentById = (paymentId: string) => {
+  const { data, isLoading, isFetching } = useQuery({
+    initialData: null,
+    queryKey: ["payment", paymentId],
+    queryFn: async () => {
+      const res = await fetch(`/api/payments/${paymentId}`);
+      const response: ApiResponse<Payment> = await res.json();
+
+      if (!res.ok) {
+        throw new Error(response.message);
+      }
+
+      return response.data;
+    },
+  });
+
+  return { data, isLoading, isFetching };
+};

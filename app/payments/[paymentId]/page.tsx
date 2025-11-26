@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useGetInvoices } from "@/features/invoice/invoice.hook";
-import { useGetPayments } from "@/features/payments/payment.hook";
+import { useGetPaymentById } from "@/features/payments/payment.hook";
 import { Payment } from "@/features/payments/payment.type";
 import { translatePeriodToText } from "@/features/shared/utils.shared";
 import { use } from "react";
@@ -38,6 +38,7 @@ function PaymentCard({ payment }: { payment: Payment }) {
             <div className="space-y-2">
               {payment.paymentAllocations.map((alloc) => (
                 <div key={alloc.id} className="p-2 border">
+                  <div>id: {alloc.id}</div>
                   <div>invoice: {alloc.invoiceId}</div>
                   <div>Dialokasikan: {alloc.amount}</div>
                 </div>
@@ -56,8 +57,11 @@ export default function PaymentDetailPage({
   params: Promise<{ paymentId: string }>;
 }) {
   const { paymentId } = use(params);
-  const { data, isFetching, isLoading } = useGetPayments();
-  const currentPayment = data?.find((p) => p.id === paymentId);
+  const {
+    data: currentPayment,
+    isFetching,
+    isLoading,
+  } = useGetPaymentById(paymentId);
   const { data: invoices } = useGetInvoices({
     userId: currentPayment?.userId ?? undefined,
   });
