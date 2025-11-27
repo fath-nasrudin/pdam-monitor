@@ -24,7 +24,7 @@ export const useGetInvoices = (queries?: {
 
   const { data, isLoading, isFetching } = useQuery({
     initialData: [],
-    queryKey: ["invoices"],
+    queryKey: ["invoice"],
     queryFn: async () => {
       const res = await fetch(url);
       if (!res.ok) {

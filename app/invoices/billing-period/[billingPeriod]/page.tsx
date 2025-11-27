@@ -36,7 +36,7 @@ function EmptyInvoice({
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["invoices"] });
+      queryClient.invalidateQueries({ queryKey: ["invoice"] });
     },
   });
   return (
@@ -61,7 +61,7 @@ export default function Page({
   const { billingPeriod } = use(params);
   const { data: invoices, isLoading } = useQuery({
     initialData: [],
-    queryKey: ["invoices"],
+    queryKey: ["invoice"],
     queryFn: async () => {
       const res = await fetch(`/api/invoices?billingPeriod=${billingPeriod}`);
       if (!res.ok) {
