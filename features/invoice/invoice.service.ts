@@ -82,3 +82,7 @@ export async function getInvoices(props?: {
 }) {
   return invoiceRepo.findInvoices({ where: props });
 }
+
+export async function getInvoiceById(invoiceId: string) {
+  return invoiceRepo.findInvoiceById(invoiceId);
+}

@@ -98,6 +98,14 @@ export async function findInvoices(props?: {
   return invoiceDB.map((invDB) => transformInvoiceToObject(invDB));
 }
 
+export async function findInvoiceById(paymentId: string): Promise<Invoice> {
+  const invoiceDB = await prisma.invoice.findUniqueOrThrow({
+    where: { id: paymentId },
+  });
+
+  return transformInvoiceToObject(invoiceDB);
+}
+
 export type GenerateInvoiceRepoInput = Omit<Invoice, "id" | "user">;
 
 export async function createInvoice(
