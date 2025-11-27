@@ -30,11 +30,16 @@ export function responseError({
   message?: string;
 }) {
   const status = 500;
+  let msg = message;
+
+  if (error instanceof Error && !msg) {
+    msg = error.message;
+  }
 
   return NextResponse.json(
     {
       ok: false,
-      message: message || "Something unexpected happened",
+      message: msg || "Something unexpected happened",
       data: null,
       error: error,
     },
