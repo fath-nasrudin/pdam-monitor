@@ -20,11 +20,17 @@ export const useGetInvoices = (queries?: {
       url += `&paymentStatus=${pS}`;
     });
   }
-  console.log({ url });
+
+  // query key builder
+  const queryKey = ["invoice"];
+  if (queries?.userId) queryKey.push(queries.userId);
+  if (queries?.billingPeriod) queryKey.push(queries.billingPeriod);
+  if (queries?.paymentStatus)
+    queryKey.push(JSON.stringify(queries.paymentStatus));
 
   const { data, isLoading, isFetching } = useQuery({
     initialData: [],
-    queryKey: ["invoice"],
+    queryKey,
     queryFn: async () => {
       const res = await fetch(url);
       if (!res.ok) {
