@@ -16,6 +16,13 @@ export async function getPaymentById(paymentId: string): Promise<Payment> {
         where: {
           paymentId: paymentId,
         },
+        include: {
+          invoice: {
+            select: {
+              billingPeriod: true,
+            },
+          },
+        },
       },
     },
   });

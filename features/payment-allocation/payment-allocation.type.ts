@@ -6,7 +6,7 @@ export type PaymentAllocation = {
   paymentId: string;
   payment?: Pick<Payment, "id">;
   invoiceId: string;
-  invoice?: Pick<Invoice, "id">;
+  invoice?: Pick<Invoice, "billingPeriod">;
   amount: number;
   notes?: string | null;
 };

@@ -46,8 +46,12 @@ function PaymentCard({ payment }: { payment: Payment }) {
             <div className="space-y-2">
               {payment.paymentAllocations?.map((alloc) => (
                 <div key={alloc.id} className="p-2 border">
-                  <div>id: {alloc.id}</div>
-                  <div>invoice: {alloc.invoiceId}</div>
+                  {alloc.invoice && (
+                    <div>
+                      Period:{" "}
+                      {translatePeriodToText(alloc.invoice.billingPeriod)}
+                    </div>
+                  )}
                   <div>Dialokasikan: {alloc.amount}</div>
                 </div>
               ))}
