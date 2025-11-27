@@ -12,5 +12,5 @@ export type Payment = {
   amountAllocated: number;
   paymentMethod: "cash" | "transfer";
   notes: string | null;
-  paymentAllocations: Omit<PaymentAllocation, "payment" | "paymentId">[];
+  paymentAllocations?: Omit<PaymentAllocation, "payment" | "paymentId">[];
 };

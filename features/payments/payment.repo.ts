@@ -18,7 +18,10 @@ export async function findPayments(): Promise<Payment[]> {
   return payments;
 }
 
-export type CreatePaymentDomainInput = Omit<Payment, "id" | "user">;
+export type CreatePaymentDomainInput = Omit<
+  Payment,
+  "id" | "user" | "paymentAllocations"
+>;
 export async function createPayment(
   paymentData: CreatePaymentDomainInput
 ): Promise<Payment> {
