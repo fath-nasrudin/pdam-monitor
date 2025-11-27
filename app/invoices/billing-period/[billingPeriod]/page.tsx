@@ -3,11 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InvoiceCard } from "@/features/invoice/components/invoice-card";
+import { useGetInvoices } from "@/features/invoice/invoice.hook";
 import { GenerateInvoiceInput } from "@/features/invoice/invoice.schema";
 import { Invoice } from "@/features/invoice/invoice.type";
 import useGetUsersByBillingPeriod from "@/features/user/user.hook";
 import { ApiResponse } from "@/lib/api/response";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { use } from "react";
 
 function EmptyInvoice({
@@ -59,23 +60,12 @@ export default function Page({
   params: Promise<{ billingPeriod: string }>;
 }) {
   const { billingPeriod } = use(params);
-  const { data: invoices, isLoading } = useQuery({
-    initialData: [],
-    queryKey: ["invoice"],
-    queryFn: async () => {
-      const res = await fetch(`/api/invoices?billingPeriod=${billingPeriod}`);
-      if (!res.ok) {
-        throw new Error("Failed to fetch invoices");
-      }
-      const data: { data: Invoice[] } = await res.json();
-      return data.data;
-    },
-  });
+  const getInvoices = useGetInvoices({ billingPeriod });
 
   const { data: users, isLoading: isUsersLoading } =
     useGetUsersByBillingPeriod(billingPeriod);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (getInvoices.isLoading) return <p>Loading...</p>;
   if (isUsersLoading) return <p>Users Loading...</p>;
 
   return (
@@ -86,7 +76,7 @@ export default function Page({
       <CardContent>
         <div className="flex flex-col gap-8">
           {users?.map((u) => {
-            const invoice = invoices.find((i) => i.userId === u.id);
+            const invoice = getInvoices.data.find((i) => i.userId === u.id);
             if (invoice) invoice.user = u;
 
             return (
