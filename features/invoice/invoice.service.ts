@@ -4,6 +4,9 @@ import * as invoiceDomain from "./invoice.domain";
 import * as invoiceRepo from "./invoice.repo";
 import { GenerateInvoiceInput } from "./invoice.schema";
 import { Invoice } from "./invoice.type";
+import { CreatePaymentAllocationSchemaInput } from "../payment-allocation/payment-allocation.schema";
+import { Invoice as InvoiceDB } from "@/lib/generated/prisma/client";
+import { prisma } from "@/lib/prisma";
 
 function getPrevBillingPeriod(currentPeriod: BillingPeriod) {
   const [yearStr, monthStr] = currentPeriod.split("-");
@@ -85,4 +88,19 @@ export async function getInvoices(props?: {
 
 export async function getInvoiceById(invoiceId: string) {
   return invoiceRepo.findInvoiceById(invoiceId);
+}
+
+export async function updateInvoiceForAlloc(
+  invoice: Invoice,
+  payAlloc: CreatePaymentAllocationSchemaInput
+) {
+  // logic for create alloc
+  const totalPaid = invoice.totalPaid + payAlloc.amount;
+
+  const data: Pick<InvoiceDB, "totalPaid" | "paymentStatus"> = {
+    totalPaid: totalPaid,
+    paymentStatus: invoice.totalAmount === totalPaid ? "paid" : "partial",
+  };
+
+  return prisma.invoice.update({ where: { id: invoice.id }, data: data });
 }

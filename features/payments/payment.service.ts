@@ -32,3 +32,13 @@ export async function createPayment(
   const createdPayment = await PaymentRepo.createPayment(payment);
   return createdPayment;
 }
+
+export async function updatePaymentForAlloc(
+  paymentId: string,
+  data: Pick<Payment, "amountAllocated" | "amountRemaining">
+) {
+  return prisma.payment.update({
+    where: { id: paymentId },
+    data: data,
+  });
+}
