@@ -11,12 +11,12 @@ import { Invoice } from "./invoice.type";
 function transformInvoiceToObject(data: InvoiceDB): Invoice {
   return {
     id: data.id,
-    userId: data.userId, //dadang
+    userId: data.userId,
     billingPeriod: data.billingPeriod,
     totalUsage: data.totalUsage,
     totalAmount: data.totalAmount,
     totalPaid: data.totalPaid,
-    paymentStatus: "unpaid",
+    paymentStatus: data.paymentStatus,
     documentStatus: data.documentStatus,
     pricing: {
       fixed: data.pricingFixed,
