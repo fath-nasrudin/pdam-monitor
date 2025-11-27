@@ -3,11 +3,12 @@
 import { ApiResponse } from "@/lib/api/response";
 import { useQuery } from "@tanstack/react-query";
 import { Payment } from "./payment.type";
+import { queryKeys } from "@/constants/query-keys";
 
 export const useGetPayments = () => {
   const { data, isLoading, isFetching } = useQuery({
     initialData: [],
-    queryKey: ["payment"],
+    queryKey: queryKeys.payments.all,
     queryFn: async () => {
       const res = await fetch("/api/payments");
       const response: ApiResponse<Payment[]> = await res.json();
@@ -24,7 +25,7 @@ export const useGetPayments = () => {
 export const useGetPaymentById = (paymentId: string) => {
   const { data, isLoading, isFetching } = useQuery({
     initialData: null,
-    queryKey: ["payment", paymentId],
+    queryKey: queryKeys.payments.detail(paymentId),
     queryFn: async () => {
       const res = await fetch(`/api/payments/${paymentId}`);
       const response: ApiResponse<Payment> = await res.json();

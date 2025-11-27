@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { UserCombobox } from "@/components/user-combobox";
+import { queryKeys } from "@/constants/query-keys";
 import { PaymentCard } from "@/features/payments/components/payment-card";
 import {
   CreatePaymentInput,
@@ -28,7 +29,7 @@ export default function AddPaymentPage() {
     isFetching: isFetchingPayments,
   } = useQuery({
     initialData: [],
-    queryKey: ["payment"],
+    queryKey: queryKeys.payments.all,
     queryFn: async () => {
       const res = await fetch("/api/payments");
       const response: ApiResponse<Payment[]> = await res.json();
@@ -57,7 +58,7 @@ export default function AddPaymentPage() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["payment"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.payments.all });
     },
   });
 

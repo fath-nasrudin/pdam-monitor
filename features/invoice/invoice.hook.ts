@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { Invoice } from "./invoice.type";
+import { queryKeys } from "@/constants/query-keys";
 
 export const useGetInvoices = (queries?: {
   billingPeriod?: string;
@@ -22,15 +23,10 @@ export const useGetInvoices = (queries?: {
   }
 
   // query key builder
-  const queryKey = ["invoice"];
-  if (queries?.userId) queryKey.push(queries.userId);
-  if (queries?.billingPeriod) queryKey.push(queries.billingPeriod);
-  if (queries?.paymentStatus)
-    queryKey.push(JSON.stringify(queries.paymentStatus));
 
   const { data, isLoading, isFetching } = useQuery({
     initialData: [],
-    queryKey,
+    queryKey: queryKeys.invoices.list(queries),
     queryFn: async () => {
       const res = await fetch(url);
       if (!res.ok) {

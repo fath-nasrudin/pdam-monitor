@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { queryKeys } from "@/constants/query-keys";
 import { InvoiceCard } from "@/features/invoice/components/invoice-card";
 import { useGetInvoices } from "@/features/invoice/invoice.hook";
 import { GenerateInvoiceInput } from "@/features/invoice/invoice.schema";
@@ -37,7 +38,7 @@ function EmptyInvoice({
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["invoice"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.invoices.all });
     },
   });
   return (

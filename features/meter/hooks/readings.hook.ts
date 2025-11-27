@@ -1,5 +1,6 @@
 "use client";
 
+import { queryKeys } from "@/constants/query-keys";
 import { useQuery } from "@tanstack/react-query";
 
 type UserMeterReadings = {
@@ -9,7 +10,7 @@ type UserMeterReadings = {
 };
 export default function useGetReadings() {
   const { data, isLoading } = useQuery({
-    queryKey: ["readings"],
+    queryKey: queryKeys.readings.all,
     queryFn: async () => {
       const response = await fetch("/api/meters/readings");
 

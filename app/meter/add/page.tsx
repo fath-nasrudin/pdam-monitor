@@ -10,8 +10,9 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { queryKeys } from "@/constants/query-keys";
 import { addReadingsSchema } from "@/features/meter/reading.schema";
-import useGetUsers from "@/features/user/user.hook";
+import { useGetUsers } from "@/features/user/user.hook";
 import { handleUIError } from "@/lib/error/uiErrorHandler";
 import { useForm } from "@tanstack/react-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -44,7 +45,7 @@ export default function AddMeterPage() {
     onSuccess: () => {
       toast.success("Berhasil tambah data");
 
-      queryClient.invalidateQueries({ queryKey: ["readings"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.readings.all });
 
       router.push("/meter");
     },
