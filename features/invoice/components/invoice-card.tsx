@@ -50,6 +50,14 @@ export function InvoiceCard({ invoice }: { invoice?: Invoice }) {
             <div>Total Tagihan</div> <div>{invoice.totalAmount}</div>
           </div>
           <div className="flex gap-2 justify-between">
+            <div>Yang sudah dibayar</div> <div>{invoice.totalPaid}</div>
+          </div>
+          <div className="flex gap-2 justify-between">
+            <div>Kurang bayar</div>{" "}
+            <div>{invoice.totalAmount - invoice.totalPaid}</div>
+          </div>
+
+          <div className="flex gap-2 justify-between">
             <div>Status Bayaran</div> <div>{invoice.paymentStatus}</div>
             {/* di bayar sebagian ada dropdown lihat berapa saja udah bayar. terhubung ke bagian payment */}
           </div>
