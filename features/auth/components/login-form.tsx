@@ -9,6 +9,7 @@ export function LoginForm() {
     await signIn("credentials", {
       username,
       password,
+      redirectTo: "/auth/handle-after-login",
     });
   };
 
