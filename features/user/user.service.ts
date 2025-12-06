@@ -1,5 +1,6 @@
 import { User } from "@/lib/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+import { compare } from "@/lib/utils/password";
 
 export type DummyUser = {
   id: string;
@@ -40,6 +41,24 @@ export const getUserlist = (): DummyUser[] => {
       password: "dadang4",
     },
   ];
+};
+
+export const login = async ({
+  username,
+  password,
+}: {
+  username: string;
+  password: string;
+}): Promise<{ id: User["id"]; username: User["username"] }> => {
+  const user = await prisma.user.findFirst({ where: { username } });
+  console.log({ password, dbPw: user?.password, user });
+
+  if (!user) throw new Error("Invalid credentials");
+
+  const isPasswordCorrect = await compare(password, user.password);
+  if (!isPasswordCorrect) throw new Error("Invalid credentials");
+
+  return { id: user.id, username: user.username };
 };
 
 export const getUsersForReadings = async (period: string): Promise<User[]> => {
