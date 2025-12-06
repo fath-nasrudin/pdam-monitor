@@ -15,17 +15,21 @@ datasource db {
 }
 
 model User {
-  id       String    @id @default(cuid())
-  username String    @unique
+  id             String @id @default(cuid())
+  username       String @unique
+  password       String
+  initialReading Int
+  initialPeriod  String
+
   readings Reading[]
   invoices Invoice[]
   payments Payment[]
 }
 
 model Reading {
-  id           String @id @default(cuid())
-  user         User   @relation(fields: [userId], references: [id])
-  userId       String
+  id            String @id @default(cuid())
+  user          User   @relation(fields: [userId], references: [id])
+  userId        String
   billingPeriod String
   readingValue  Float
 
@@ -33,37 +37,36 @@ model Reading {
 }
 
 model Invoice {
-  id             String   @id @default(cuid())
-  userId         String
-  user           User     @relation(fields: [userId], references: [id])
-  billingPeriod  String
+  id            String @id @default(cuid())
+  userId        String
+  user          User   @relation(fields: [userId], references: [id])
+  billingPeriod String
 
-  totalUsage     Int
-  totalAmount    Int
-  totalPaid      Int
+  totalUsage  Int
+  totalAmount Int
+  totalPaid   Int
 
-  paymentStatus  PaymentStatus @default(unpaid)
+  paymentStatus  PaymentStatus  @default(unpaid)
   documentStatus DocumentStatus
 
   // pricing flattened
-  pricingFixed            Int
-  pricingTariff           Int
-  pricingDiscountAmount   Int?
-  pricingDiscountPercent  Int?
+  pricingFixed           Int
+  pricingTariff          Int
+  pricingDiscountAmount  Int?
+  pricingDiscountPercent Int?
 
   // reading flattened
-  readingPrev             Int
-  readingCurr             Int
-  readingDiscountAmount   Int?
-  readingDiscountPercent  Int?
+  readingPrev            Int
+  readingCurr            Int
+  readingDiscountAmount  Int?
+  readingDiscountPercent Int?
+
+  paymentAllocations PaymentAllocation[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
 
   // unique constraint
   @@unique([userId, billingPeriod])
-
-  paymentAllocations PaymentAllocation[]
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
 }
 
 enum DocumentStatus {
@@ -79,22 +82,21 @@ enum PaymentStatus {
 }
 
 model Payment {
-  id              String   @id @default(cuid())
-  userId          String
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   amount          Int
   amountRemaining Int
   amountAllocated Int
 
-  paymentMethod   PaymentMethod
-  notes           String?
+  paymentMethod PaymentMethod
+  notes         String?
 
   paymentAllocations PaymentAllocation[]
 
-
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum PaymentMethod {
@@ -103,15 +105,15 @@ enum PaymentMethod {
 }
 
 model PaymentAllocation {
-  id         String   @id @default(cuid())
-  paymentId  String
-  invoiceId  String
-  amount     Int
-  notes      String?
+  id        String  @id @default(cuid())
+  paymentId String
+  invoiceId String
+  amount    Int
+  notes     String?
 
   // relations
-  payment    Payment  @relation(fields: [paymentId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  invoice    Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  payment Payment @relation(fields: [paymentId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
   @@index([paymentId])
   @@index([invoiceId])
