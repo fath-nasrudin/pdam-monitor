@@ -1,4 +1,4 @@
-import { genSalt, hash } from "bcrypt-ts";
+import { genSalt, hash, compare as bcryptCompare } from "bcrypt-ts";
 
 export async function saltAndHashPassword(password: string) {
   const salt = await genSalt(10);
@@ -6,5 +6,5 @@ export async function saltAndHashPassword(password: string) {
 }
 
 export async function compare(password: string, hashedPassword: string) {
-  return compare(password, hashedPassword);
+  return bcryptCompare(password, hashedPassword);
 }
