@@ -8,12 +8,14 @@ declare module "next-auth" {
   interface User {
     id: IUser["id"];
     username: IUser["username"];
+    role: IUser["role"];
   }
 
   interface Session {
     user: {
       id: User["id"];
       username: User["username"];
+      role: IUser["role"];
     };
   }
 }
@@ -22,5 +24,6 @@ declare module "next-auth/jwt" {
   interface JWT {
     id: string;
     username: string;
+    role: IUser["role"];
   }
 }

@@ -35,6 +35,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user) {
         token.id = user.id;
         token.username = user.username;
+        token.role = user.role;
       }
       return token;
     },
@@ -42,6 +43,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     session: async ({ session, token }) => {
       session.user.username = token.username;
       session.user.id = token.id;
+      session.user.role = token.role;
       return session;
     },
   },

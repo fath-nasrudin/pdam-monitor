@@ -18,6 +18,7 @@ model User {
   id             String @id @default(cuid())
   username       String @unique
   password       String
+  role           Role   @default(USER)
   initialReading Int
   initialPeriod  String
 
@@ -79,6 +80,11 @@ enum PaymentStatus {
   partial
   unpaid
   waiped
+}
+
+enum Role {
+  ADMIN
+  USER
 }
 
 model Payment {

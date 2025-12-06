@@ -5,6 +5,7 @@ export const userSchema = z.object({
   id: z.string(),
   username: z.string(),
   password: z.string(),
+  role: z.enum(["ADMIN", "USER"]),
   initialPeriod: billingPeriodSchema,
   initialReading: z.coerce.number(),
 });

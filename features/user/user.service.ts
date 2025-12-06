@@ -49,7 +49,11 @@ export const login = async ({
 }: {
   username: string;
   password: string;
-}): Promise<{ id: User["id"]; username: User["username"] }> => {
+}): Promise<{
+  id: User["id"];
+  username: User["username"];
+  role: User["role"];
+}> => {
   const user = await prisma.user.findFirst({ where: { username } });
   console.log({ password, dbPw: user?.password, user });
 
@@ -58,7 +62,7 @@ export const login = async ({
   const isPasswordCorrect = await compare(password, user.password);
   if (!isPasswordCorrect) throw new Error("Invalid credentials");
 
-  return { id: user.id, username: user.username };
+  return { id: user.id, username: user.username, role: user.role };
 };
 
 export const getUsersForReadings = async (period: string): Promise<User[]> => {
