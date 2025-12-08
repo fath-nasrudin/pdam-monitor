@@ -1,6 +1,7 @@
 import { User } from "@/lib/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { compare } from "@/lib/utils/password";
+import { UserSafe } from "./user.schema";
 
 export type DummyUser = {
   id: string;
@@ -55,7 +56,6 @@ export const login = async ({
   role: User["role"];
 }> => {
   const user = await prisma.user.findFirst({ where: { username } });
-  console.log({ password, dbPw: user?.password, user });
 
   if (!user) throw new Error("Invalid credentials");
 
@@ -65,17 +65,22 @@ export const login = async ({
   return { id: user.id, username: user.username, role: user.role };
 };
 
-export const getUsersForReadings = async (period: string): Promise<User[]> => {
-  console.log({ period });
-  console.log("TODO: period should be implemented");
-  const users = await prisma.user.findMany();
+export const getUsersForReadings = async (
+  period: string
+): Promise<UserSafe[]> => {
+  const users = await prisma.user.findMany({
+    where: { initialPeriod: { lte: period }, role: "USER" },
+    omit: { password: true },
+  });
   return users;
 };
+
 export const getUsersByBillingPeriod = async (
   period: string
-): Promise<User[]> => {
-  console.log({ period });
-  console.log("TODO: period should be implemented");
-  const users = await prisma.user.findMany();
+): Promise<UserSafe[]> => {
+  const users = (await prisma.user.findMany({
+    where: { initialPeriod: { lte: period }, role: "USER" },
+    omit: { password: true },
+  })) satisfies UserSafe[];
   return users;
 };
