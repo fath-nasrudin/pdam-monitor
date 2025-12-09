@@ -1,15 +1,28 @@
-import { auth } from "@/lib/auth/auth";
+"use client";
 
-export default async function DashboardPage() {
-  const session = await auth();
+import { useGetInvoices } from "@/features/invoice/invoice.hook";
+import useGetReadings from "@/features/meter/hooks/readings.hook";
+import { useGetPayments } from "@/features/payments/payment.hook";
+import { useGetUsers } from "@/features/user/user.hook";
+import { useSession } from "next-auth/react";
+
+export default function DashboardPage() {
+  const { data: session } = useSession();
+  const getUsers = useGetUsers();
+  const getInvoices = useGetInvoices();
+  const getReadings = useGetReadings();
+  const getPayments = useGetPayments();
 
   // should return not authorized page
-  if (session?.user.role !== "ADMIN") return <p>NOT AUTHORIZED</p>;
+  if (session?.user.role !== "ADMIN") return <p>FORBIDDEN</p>;
 
   return (
     <div>
-      <p>This is the admin page</p>
-      <p>{JSON.stringify(session?.user)}</p>
+      <p>Admin Page</p>
+      <div>Total User: {getUsers.data?.length}</div>
+      <div>Total Invoice: {getInvoices.data?.length}</div>
+      <div>Total Reading: {getReadings.data?.length}</div>
+      <div>Total Payment: {getPayments.data?.length}</div>
     </div>
   );
 }
