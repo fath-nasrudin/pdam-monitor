@@ -3,6 +3,9 @@ import { responseError, responseSuccess } from "@/lib/api/response";
 import { NextRequest } from "next/server";
 import * as PaymentService from "@/features/payments/payment.service";
 import { PaymentAllocation } from "@/features/payment-allocation/payment-allocation.type";
+import { auth } from "@/lib/auth/auth";
+import { can } from "@/lib/auth/permission/permission.util";
+import { PERMISSIONS } from "@/lib/auth/permission/permission.constant";
 
 const paymentAllocations: PaymentAllocation[] = [
   {
@@ -37,6 +40,9 @@ const paymentAllocations: PaymentAllocation[] = [
 
 export async function GET() {
   try {
+    const session = await auth();
+    can(session, PERMISSIONS.payment.readList);
+
     const payments = await PaymentService.getPayments();
 
     const extendedPayments = payments.map((p) => ({
@@ -51,6 +57,9 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await auth();
+    can(session, PERMISSIONS.payment.create);
+
     const body = await req.json();
     const data = await createPaymentSchema.parseAsync(body);
     const payment = await PaymentService.createPayment(data);

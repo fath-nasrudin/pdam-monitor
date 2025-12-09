@@ -2,7 +2,21 @@ import { Session } from "next-auth";
 import { PERMISSIONS } from "./permission.constant";
 
 const userPermissions = {
-  USER: [PERMISSIONS.user.read],
+  USER: [
+    PERMISSIONS.user.read,
+
+    PERMISSIONS.invoice.read,
+    PERMISSIONS.invoice.readList,
+
+    PERMISSIONS.payAlloc.read,
+    PERMISSIONS.payAlloc.readList,
+
+    PERMISSIONS.payment.read,
+    PERMISSIONS.payment.readList,
+
+    PERMISSIONS.reading.read,
+    PERMISSIONS.reading.readList,
+  ],
   ADMIN: ["*"],
 };
 
