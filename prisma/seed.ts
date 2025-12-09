@@ -1,17 +1,37 @@
-import { Reading, User } from "@/lib/generated/prisma/client";
 import { prisma } from "../lib/prisma"; // pastikan import path sesuai
+import { UserRegisterInputSchema, UserSafe } from "@/features/user/user.schema";
+import { createUser } from "@/features/user/user.service";
+import { Reading } from "@/lib/generated/prisma/client";
 
-const users = [
-  "dadang",
-  "diding",
-  "dudung",
-  "dedeng",
-  "dodong",
-  "yayan",
-  "yiyin",
-  "yuyun",
-  "yeyen",
-  "yoyon",
+const users: UserRegisterInputSchema[] = [
+  {
+    initialPeriod: "2025-10",
+    initialReading: 2,
+    password: "user123",
+    role: "USER",
+    username: "dadang",
+  },
+  {
+    initialPeriod: "2024-10",
+    initialReading: 2,
+    password: "user123",
+    role: "USER",
+    username: "diding",
+  },
+  {
+    initialPeriod: "2023-10",
+    initialReading: 2,
+    password: "user123",
+    role: "USER",
+    username: "dudung",
+  },
+  {
+    initialPeriod: "2023-10",
+    initialReading: 2,
+    password: process.env.ADMIN_INITIAL_PASSWORD as string,
+    role: "ADMIN",
+    username: process.env.ADMIN_INITIAL_USERNAME as string,
+  },
 ];
 
 function generateBillingPeriods(start: string, end?: string): string[] {
@@ -50,15 +70,11 @@ function generateNextReading(prev: number): number {
 
 async function main() {
   // Upsert semua user
-  const userPromises: Promise<User>[] = users.map((username) =>
-    prisma.user.upsert({
-      where: { username },
-      update: {},
-      create: { username },
-    })
+  const userPromises: Promise<UserSafe>[] = users.map((user) =>
+    createUser(user)
   );
 
-  const userResults: User[] = await Promise.all(userPromises);
+  const userResults: UserSafe[] = await Promise.all(userPromises);
 
   const readingPromises: Promise<Reading>[] = [];
 
