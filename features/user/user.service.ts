@@ -1,7 +1,7 @@
 import { User } from "@/lib/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
-import { compare } from "@/lib/utils/password";
-import { UserSafe } from "./user.schema";
+import { compare, saltAndHashPassword } from "@/lib/utils/password";
+import { UserRegisterInputSchema, UserSafe } from "./user.schema";
 
 export type DummyUser = {
   id: string;
@@ -63,6 +63,19 @@ export const login = async ({
   if (!isPasswordCorrect) throw new Error("Invalid credentials");
 
   return { id: user.id, username: user.username, role: user.role };
+};
+
+export const createUser = async (
+  data: UserRegisterInputSchema
+): Promise<UserSafe> => {
+  const hashedPw = await saltAndHashPassword(data.password);
+
+  const user: UserSafe = await prisma.user.create({
+    data: { ...data, password: hashedPw },
+    omit: { password: true },
+  });
+
+  return user;
 };
 
 export const getUsersForReadings = async (
