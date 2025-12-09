@@ -63,6 +63,7 @@ export default function AddMeterPage() {
 
   const formDefaultValues = {
     billingPeriod: "",
+    readingDate: new Date().toISOString(),
     readings: defaultReadings,
   };
   // form
@@ -105,6 +106,28 @@ export default function AddMeterPage() {
                 </FieldLabel>
                 <div>
                   <Input
+                    id={field.name}
+                    name={field.name}
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    required
+                  />
+                  {!field.state.meta.isValid && (
+                    <em role="alert">{field.state.meta.errors[0]?.message}</em>
+                  )}
+                </div>
+              </Field>
+            )}
+          </form.Field>
+          <form.Field name="readingDate">
+            {(field) => (
+              <Field orientation={"horizontal"}>
+                <FieldLabel className="min-w-40" htmlFor={field.name}>
+                  {"Periode"}
+                </FieldLabel>
+                <div>
+                  <Input
+                    type="date"
                     id={field.name}
                     name={field.name}
                     value={field.state.value}

@@ -9,6 +9,7 @@ export const readingItemSchema = z.object({
 
 export const addReadingsSchema = z.object({
   billingPeriod: billingPeriodSchema,
+  readingDate: z.coerce.date<string>(),
   readings: z.array(readingItemSchema).min(1, "Minimal 1 reading"),
 });
 

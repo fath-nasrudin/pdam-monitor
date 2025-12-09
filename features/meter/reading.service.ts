@@ -55,6 +55,7 @@ export async function addReadingsBulk(input: AddReadingsInput) {
     userId: r.userId,
     billingPeriod: input.billingPeriod,
     readingValue: r.readingValue,
+    readingDate: input.readingDate,
   }));
 
   await prisma.reading.createMany({
