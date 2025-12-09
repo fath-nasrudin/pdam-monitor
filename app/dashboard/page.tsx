@@ -19,10 +19,14 @@ export default function DashboardPage() {
   return (
     <div>
       <p>Admin Page</p>
-      <div>Total User: {getUsers.data?.length}</div>
-      <div>Total Invoice: {getInvoices.data?.length}</div>
-      <div>Total Reading: {getReadings.data?.length}</div>
-      <div>Total Payment: {getPayments.data?.length}</div>
+      <div>Nama Admin: {session.user.username}</div>
+      <div>
+        <h2>Ringkasan</h2>
+        <div>Total User: {getUsers.data?.length}</div>
+        <div>Total Invoice: {getInvoices.data?.length}</div>
+        <div>Total Reading: {getReadings.data?.length}</div>
+        <div>Total Payment: {getPayments.data?.length}</div>
+      </div>
     </div>
   );
 }

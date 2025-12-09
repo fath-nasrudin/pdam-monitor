@@ -9,7 +9,7 @@ export default async function DashboardPage() {
   return (
     <div>
       <p>This is the user page</p>
-      <p>{JSON.stringify(session?.user)}</p>
+      <p>Nama Pengguna: {session.user.username}</p>
     </div>
   );
 }
