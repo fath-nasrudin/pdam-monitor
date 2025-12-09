@@ -6,5 +6,10 @@ export function createPayment(
 ): CreatePaymentDomainInput {
   // do all logic
 
-  return { ...data, amountAllocated: 0, amountRemaining: data.amount };
+  return {
+    ...data,
+    notes: data.notes || null,
+    amountAllocated: 0,
+    amountRemaining: data.amount,
+  };
 }
