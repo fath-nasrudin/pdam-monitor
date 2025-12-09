@@ -12,4 +12,12 @@ export const ROUTES = {
       path: "/payments/add",
     },
   },
+  auth: {
+    login: {
+      path: "/auth/login",
+    },
+    register: {
+      path: "/auth/register",
+    },
+  },
 };
