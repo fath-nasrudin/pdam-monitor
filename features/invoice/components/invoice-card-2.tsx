@@ -3,6 +3,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Invoice } from "@/features/invoice/invoice.type";
 import { translatePeriodToText } from "@/features/shared/utils.shared";
+import { formatRupiah } from "@/lib/utils";
 
 interface Props {
   invoice?: Invoice;
@@ -30,10 +31,14 @@ export function InvoiceCard({ invoice }: Props) {
     { label: "Meteran Akhir", value: invoice.reading.curr },
     { label: "Total Meteran", value: invoice.totalUsage },
     { label: "Beban Bulanan", value: invoice.pricing.fixed },
-    { label: "Air per kubik", value: invoice.pricing.tariff },
-    { label: "Total Tagihan", value: invoice.totalAmount },
-    { label: "Yang sudah dibayar", value: invoice.totalPaid },
-    { label: "Kurang bayar", value: invoice.totalAmount - invoice.totalPaid },
+    { label: "Air per kubik", value: invoice.pricing.tariff, type: "price" },
+    { label: "Total Tagihan", value: invoice.totalAmount, type: "price" },
+    { label: "Yang sudah dibayar", value: invoice.totalPaid, type: "price" },
+    {
+      label: "Kurang bayar",
+      value: invoice.totalAmount - invoice.totalPaid,
+      type: "price",
+    },
   ];
 
   return (
@@ -52,7 +57,9 @@ export function InvoiceCard({ invoice }: Props) {
           {rows.map((item) => (
             <div key={item.label} className="flex justify-between text-sm">
               <span className="text-muted-foreground">{item.label}</span>
-              <span className="font-medium">{item.value}</span>
+              <span className="font-medium">
+                {item.type === "price" ? formatRupiah(item.value) : item.value}
+              </span>
             </div>
           ))}
         </div>
