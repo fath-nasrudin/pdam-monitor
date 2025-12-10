@@ -73,7 +73,11 @@ export default function AddMeterPage() {
       onChange: addReadingsSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
+      // dont send the value that zero or empty
+      value.readings = value.readings.filter(
+        (item) => Number(item.readingValue) > 0
+      );
+
       mutation.mutate(value);
     },
   });
@@ -123,7 +127,7 @@ export default function AddMeterPage() {
             {(field) => (
               <Field orientation={"horizontal"}>
                 <FieldLabel className="min-w-40" htmlFor={field.name}>
-                  {"Periode"}
+                  {"Tanggal Pencatatan"}
                 </FieldLabel>
                 <div>
                   <Input
