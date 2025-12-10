@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { queryKeys } from "@/constants/query-keys";
-import { InvoiceCard } from "@/features/invoice/components/invoice-card";
+import { InvoiceCard } from "@/features/invoice/components/invoice-card-2";
 import { useGetInvoices } from "@/features/invoice/invoice.hook";
 import { GenerateInvoiceInput } from "@/features/invoice/invoice.schema";
 import { Invoice } from "@/features/invoice/invoice.type";
