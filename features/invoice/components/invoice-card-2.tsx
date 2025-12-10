@@ -29,8 +29,15 @@ export function InvoiceCard({ invoice }: Props) {
     { label: "Nama Pengguna", value: invoice.user?.username ?? "-" },
     { label: "Meteran Awal", value: invoice.reading.prev },
     { label: "Meteran Akhir", value: invoice.reading.curr },
-    { label: "Total Meteran", value: invoice.totalUsage },
-    { label: "Beban Bulanan", value: invoice.pricing.fixed },
+    {
+      label: "Total Penggunaan",
+      value: (
+        <>
+          {invoice.totalUsage}m<sup>3</sup>
+        </>
+      ),
+    },
+    { label: "Beban Bulanan", value: invoice.pricing.fixed, type: "price" },
     { label: "Air per kubik", value: invoice.pricing.tariff, type: "price" },
     { label: "Total Tagihan", value: invoice.totalAmount, type: "price" },
     { label: "Yang sudah dibayar", value: invoice.totalPaid, type: "price" },
