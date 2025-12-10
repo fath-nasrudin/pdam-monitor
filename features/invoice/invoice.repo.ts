@@ -5,13 +5,20 @@ import {
   Invoice as InvoiceDB,
   PaymentStatus,
   Prisma,
+  User,
 } from "@/lib/generated/prisma/client";
 import { Invoice } from "./invoice.type";
+import { InvoiceInclude } from "@/lib/generated/prisma/models";
 
-function transformInvoiceToObject(data: InvoiceDB): Invoice {
+type InvoiceDBB = InvoiceDB & { user?: Partial<User> };
+
+function transformInvoiceToObject(data: InvoiceDBB): Invoice {
   return {
     id: data.id,
     userId: data.userId,
+    user: {
+      username: data.user?.username,
+    },
     billingPeriod: data.billingPeriod,
     totalUsage: data.totalUsage,
     totalAmount: data.totalAmount,
@@ -77,6 +84,7 @@ export async function findInvoices(props?: {
     userId?: string;
     paymentStatus?: PaymentStatus[];
   };
+  include?: InvoiceInclude;
 }): Promise<Invoice[]> {
   let billingPeriod = props?.where?.billingPeriod ?? undefined;
 
@@ -93,6 +101,13 @@ export async function findInvoices(props?: {
             in: props?.where?.paymentStatus,
           }
         : undefined,
+    },
+    include: {
+      user: {
+        select: {
+          username: true,
+        },
+      },
     },
   });
   return invoiceDB.map((invDB) => transformInvoiceToObject(invDB));
