@@ -97,3 +97,11 @@ export const getUsersByBillingPeriod = async (
   })) satisfies UserSafe[];
   return users;
 };
+
+export const getCustomers = async (): Promise<UserSafe[]> => {
+  const users = (await prisma.user.findMany({
+    where: { role: "USER" },
+    omit: { password: true },
+  })) satisfies UserSafe[];
+  return users;
+};

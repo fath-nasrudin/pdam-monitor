@@ -20,4 +20,9 @@ export const ROUTES = {
       path: "/auth/register",
     },
   },
+  customers: {
+    list: {
+      path: "/dashboard/customers",
+    },
+  },
 };
