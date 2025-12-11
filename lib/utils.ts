@@ -5,6 +5,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+// use for testing suspense
+export function sleep(ms: number) {
+  return new Promise((res) => setTimeout(res, ms));
+}
+
 export function formatRupiah(value: number | string) {
   const num = typeof value === "string" ? Number(value) : value;
   if (isNaN(num)) return "Rp 0";
