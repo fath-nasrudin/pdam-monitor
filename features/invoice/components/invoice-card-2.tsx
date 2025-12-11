@@ -29,7 +29,11 @@ export function InvoiceCard({ invoice }: Props) {
   }
 
   const rows = [
-    { label: "Nama Pengguna", value: invoice.user?.username ?? "-" },
+    {
+      label: "Nama Pengguna",
+      value: invoice.user?.username ?? "-",
+      bold: true,
+    },
     { label: "Meteran Awal", value: invoice.reading.prev },
     { label: "Meteran Akhir", value: invoice.reading.curr },
     {
@@ -39,10 +43,16 @@ export function InvoiceCard({ invoice }: Props) {
           {invoice.totalUsage}m<sup>3</sup>
         </>
       ),
+      bold: true,
     },
     { label: "Beban Bulanan", value: invoice.pricing.fixed, type: "price" },
     { label: "Air per kubik", value: invoice.pricing.tariff, type: "price" },
-    { label: "Total Tagihan", value: invoice.totalAmount, type: "price" },
+    {
+      label: "Total Tagihan",
+      value: invoice.totalAmount,
+      type: "price",
+      bold: true,
+    },
     { label: "Yang sudah dibayar", value: invoice.totalPaid, type: "price" },
     {
       label: "Kurang bayar",
@@ -65,9 +75,23 @@ export function InvoiceCard({ invoice }: Props) {
       <CardContent className="space-y-4">
         <div className="space-y-3">
           {rows.map((item) => (
-            <div key={item.label} className="flex justify-between text-sm">
-              <span className="text-muted-foreground">{item.label}</span>
-              <span className="font-medium">
+            <div key={item.label} className={`flex justify-between text-sm`}>
+              <span
+                className={`${
+                  item.bold
+                    ? "text-primary font-semibold"
+                    : "text-muted-foreground"
+                }`}
+              >
+                {item.label}
+              </span>
+              <span
+                className={`${
+                  item.bold
+                    ? "text-primary font-semibold"
+                    : "text-muted-foreground"
+                }`}
+              >
                 {item.type === "price" ? formatRupiah(item.value) : item.value}
               </span>
             </div>
