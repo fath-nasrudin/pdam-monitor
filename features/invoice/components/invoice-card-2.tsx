@@ -1,3 +1,6 @@
+"use client";
+
+import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
@@ -108,5 +111,36 @@ export function PaymentBreakdown({
         </div>
       ))}
     </div>
+  );
+}
+
+export function InvoiceCardSkeleton() {
+  return (
+    <Card className="shadow-md border rounded-2xl">
+      <CardHeader className="text-center pb-4">
+        <CardTitle className="space-y-2 flex flex-col items-center">
+          <Skeleton className="h-5 w-24" />
+          <Skeleton className="h-4 w-32" />
+        </CardTitle>
+      </CardHeader>
+
+      <CardContent className="space-y-4">
+        <div className="space-y-3">
+          {Array.from({ length: 9 }).map((_, i) => (
+            <div key={i} className="flex justify-between items-center">
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-4 w-20" />
+            </div>
+          ))}
+        </div>
+
+        <Separator />
+
+        <div className="flex justify-between items-center">
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-5 w-20 rounded-md" />
+        </div>
+      </CardContent>
+    </Card>
   );
 }
